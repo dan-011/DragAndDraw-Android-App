@@ -59,18 +59,24 @@ class BoxDrawingView(
         val startPoint = currentBox?.start ?: PointF(0f, 0f)
         val deltaX = current.x - startPoint.x
         val deltaY = current.y - startPoint.y
-        val absWidth = Math.min(Math.abs(deltaX), Math.abs(deltaY))
-        val width = if(deltaX < 0) {
-            absWidth * -1
+        val width = Math.abs(deltaX)
+        val height = Math.abs(deltaY)
+
+        currentBox?.width = width
+        currentBox?.height = height
+
+        val pointChange = Math.min(width, height)
+        val changeX = if(deltaX < 0) {
+            pointChange * -1
         } else {
-            absWidth
+            pointChange
         }
-        val height = if(deltaY < 0){
-            absWidth * -1
+        val changeY = if(deltaY < 0){
+            pointChange * -1
         } else {
-            absWidth
+            pointChange
         }
-        val endPoint: PointF = PointF(startPoint.x + width, startPoint.y + height)
+        val endPoint: PointF = PointF(startPoint.x + changeX, startPoint.y + changeY)
         currentBox?.let {
             it.end = endPoint
             invalidate()
