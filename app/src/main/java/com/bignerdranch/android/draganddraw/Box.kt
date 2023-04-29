@@ -3,6 +3,9 @@ package com.bignerdranch.android.draganddraw
 import android.graphics.PointF
 
 data class Box(val start: PointF) {
+    var width = 0f
+    var height = 0f
+
     var end: PointF = start
 
     val left: Float
@@ -16,5 +19,4 @@ data class Box(val start: PointF) {
 
     val bottom: Float
         get() = Math.max(start.y, end.y)
-
 }

@@ -31,8 +31,10 @@ class BoxDrawingView(
             MotionEvent.ACTION_DOWN -> {
                 action = "ACTION_DOWN"
                 // Reset the drawing state
-                currentBox = Box(current).also {
-                    boxes.add(it)
+                if(boxes.size < 3){
+                    currentBox = Box(current).also {
+                        boxes.add(it)
+                    }
                 }
             }
             MotionEvent.ACTION_MOVE -> {
@@ -56,22 +58,26 @@ class BoxDrawingView(
     }
 
     private fun updateCurrentBox(current: PointF){
-        val startPoint = currentBox?.start ?: PointF(0f, 0f)
-        val deltaX = current.x - startPoint.x
-        val deltaY = current.y - startPoint.y
-        val absWidth = Math.min(Math.abs(deltaX), Math.abs(deltaY))
-        val width = if(deltaX < 0) {
-            absWidth * -1
-        } else {
-            absWidth
-        }
-        val height = if(deltaY < 0){
-            absWidth * -1
-        } else {
-            absWidth
-        }
-        val endPoint: PointF = PointF(startPoint.x + width, startPoint.y + height)
         currentBox?.let {
+            val startPoint = it.start
+            val deltaX = current.x - startPoint.x
+            val deltaY = current.y - startPoint.y
+            it.width = Math.abs(deltaX)
+            it.height = Math.abs(deltaY)
+
+            val pointChange = Math.min(it.width, it.height)
+            val changeX = if(deltaX < 0) {
+                pointChange * -1
+            } else {
+                pointChange
+            }
+            val changeY = if(deltaY < 0){
+                pointChange * -1
+            } else {
+                pointChange
+            }
+            val endPoint = PointF(startPoint.x + changeX, startPoint.y + changeY)
+
             it.end = endPoint
             invalidate()
         }
@@ -82,7 +88,11 @@ class BoxDrawingView(
         canvas.drawPaint(backgroundPaint)
 
         boxes.forEach { box ->
-            canvas.drawRect(box.left, box.top, box.right, box.bottom, boxPaint)
+            if(box.width > box.height) {
+                canvas.drawRect(box.left, box.top, box.right, box.bottom, boxPaint)
+            } else {
+                canvas.drawOval(box.left, box.top, box.right, box.bottom, boxPaint)
+            }
         }
     }
 }
