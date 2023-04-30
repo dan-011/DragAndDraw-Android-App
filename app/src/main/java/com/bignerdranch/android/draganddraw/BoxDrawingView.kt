@@ -56,28 +56,26 @@ class BoxDrawingView(
     }
 
     private fun updateCurrentBox(current: PointF){
-        val startPoint = currentBox?.start ?: PointF(0f, 0f)
-        val deltaX = current.x - startPoint.x
-        val deltaY = current.y - startPoint.y
-        val width = Math.abs(deltaX)
-        val height = Math.abs(deltaY)
-
-        currentBox?.width = width
-        currentBox?.height = height
-
-        val pointChange = Math.min(width, height)
-        val changeX = if(deltaX < 0) {
-            pointChange * -1
-        } else {
-            pointChange
-        }
-        val changeY = if(deltaY < 0){
-            pointChange * -1
-        } else {
-            pointChange
-        }
-        val endPoint: PointF = PointF(startPoint.x + changeX, startPoint.y + changeY)
         currentBox?.let {
+            val startPoint = it.start
+            val deltaX = current.x - startPoint.x
+            val deltaY = current.y - startPoint.y
+
+            it.width = Math.abs(deltaX)
+            it.height = Math.abs(deltaY)
+
+            val pointChange = Math.min(it.width, it.height)
+            val changeX = if(deltaX < 0) {
+                pointChange * -1
+            } else {
+                pointChange
+            }
+            val changeY = if(deltaY < 0){
+                pointChange * -1
+            } else {
+                pointChange
+            }
+            val endPoint = PointF(startPoint.x + changeX, startPoint.y + changeY)
             it.end = endPoint
             invalidate()
         }
