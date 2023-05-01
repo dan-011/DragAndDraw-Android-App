@@ -31,11 +31,12 @@ class BoxDrawingView(
             MotionEvent.ACTION_DOWN -> {
                 action = "ACTION_DOWN"
                 // Reset the drawing state
-                if(boxes.size < 3){
+                if(boxes.size < 3) {
                     currentBox = Box(current).also {
                         boxes.add(it)
                     }
                 }
+
             }
             MotionEvent.ACTION_MOVE -> {
                 action = "ACTION_MOVE"
